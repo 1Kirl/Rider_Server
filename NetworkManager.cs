@@ -108,15 +108,16 @@ public class NetworkManager : INetEventListener
         reader.Recycle();
     }
 
+
     public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
     {
         if (connectedPlayers.Remove(peer, out var player))
         {
             Console.WriteLine($"[Server] Player disconnected: {player.ClientId}");
         }
-        Console.WriteLine("Disconnected");    
+        Console.WriteLine("Disconnected");
     }
-    
+
     public void RegisterSession(GameSession session)
     {
         foreach (var player in session.GetPlayers())
@@ -129,6 +130,12 @@ public class NetworkManager : INetEventListener
         session.OnGameEnded += HandleGameStart;
         session.OnGameEnded += HandleGameEnded;
     }
+
+    public void WaitingMember(List<Player> waitingPlayers)
+    {
+        MessageSender.SendWaitingPlayers(waitingPlayers);
+    }
+
     private void HandleGameStart(List<Player> players)
     {
         MessageSender.SendGameStart(players);

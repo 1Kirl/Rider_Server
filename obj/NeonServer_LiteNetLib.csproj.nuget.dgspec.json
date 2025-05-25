@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/kirl/Desktop/NeonServer_LiteNetLib/NeonServer_LiteNetLib.csproj": {}
+    "/Users/kirl/Desktop/NeonServer_LiteNetLib/3D_Rider_Server/NeonServer_LiteNetLib.csproj": {}
   },
   "projects": {
-    "/Users/kirl/Desktop/NeonServer_LiteNetLib/NeonServer_LiteNetLib.csproj": {
+    "/Users/kirl/Desktop/NeonServer_LiteNetLib/3D_Rider_Server/NeonServer_LiteNetLib.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/kirl/Desktop/NeonServer_LiteNetLib/NeonServer_LiteNetLib.csproj",
+        "projectUniqueName": "/Users/kirl/Desktop/NeonServer_LiteNetLib/3D_Rider_Server/NeonServer_LiteNetLib.csproj",
         "projectName": "NeonServer_LiteNetLib",
-        "projectPath": "/Users/kirl/Desktop/NeonServer_LiteNetLib/NeonServer_LiteNetLib.csproj",
+        "projectPath": "/Users/kirl/Desktop/NeonServer_LiteNetLib/3D_Rider_Server/NeonServer_LiteNetLib.csproj",
         "packagesPath": "/Users/kirl/.nuget/packages/",
-        "outputPath": "/Users/kirl/Desktop/NeonServer_LiteNetLib/obj/",
+        "outputPath": "/Users/kirl/Desktop/NeonServer_LiteNetLib/3D_Rider_Server/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/kirl/.nuget/NuGet/NuGet.Config"
@@ -59,31 +59,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Runtime.linux-x64",
-              "version": "[8.0.8, 8.0.8]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.linux-x64",
-              "version": "[8.0.8, 8.0.8]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Runtime.linux-x64",
-              "version": "[8.0.8, 8.0.8]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
           "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
-        }
-      },
-      "runtimes": {
-        "linux-x64": {
-          "#import": []
         }
       }
     }

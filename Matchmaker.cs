@@ -21,6 +21,7 @@ public class Matchmaker
         player.CarKind = carKind;
         player.Name = nickname;
         waitingPlayers.Add(player);
+        NetworkManager.Instance.WaitingMember(waitingPlayers);
 
         Console.WriteLine($"[Matchmaker] Player added: player #{player.ClientId}, ({waitingPlayers.Count}/{MatchSize})");
 

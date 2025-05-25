@@ -27,11 +27,26 @@ namespace Shared.Network
                     writer.Put(otherPlayer.CarKind);
                     writer.Put(otherPlayer.Name);
                     player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
-                    Console.WriteLine($"[Sender] Send PlayerInfo of a room id:{otherPlayer.ClientId} / name: {otherPlayer.Name}");
-
+                    Console.WriteLine($"[Sender] /matchFound/ Send memeberInfo of a room id:{otherPlayer.ClientId} / name: {otherPlayer.Name}");
                 }
             }
         }
+        public static void SendWaitingPlayers(List<Player> waitingPlayers)
+        {
+            var packetMaking = new BitWriter();
+            packetMaking.WriteBits((int)PacketType.WaitingMember, 3);
+            packetMaking.WriteBits((int)waitingPlayers.Count, 3);
+            byte[] packet = packetMaking.ToArray();
+            NetDataWriter writer = new NetDataWriter();
+            writer.Put(packet);
+            foreach (var player in waitingPlayers)
+            {
+                player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
+                Console.WriteLine($"[Sender] /WaitingMember/ {waitingPlayers.Count}");
+            }
+        }
+
+        
         // server says "it's your info now!"
         public static void SendPlayerInfo(Player player)
         {
@@ -43,7 +58,7 @@ namespace Shared.Network
             NetDataWriter writer = new NetDataWriter();
             writer.Put(packet);
             player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
-            Console.WriteLine($"[Sender] send single player info: {(int)player.ClientId}");
+            Console.WriteLine($"[Sender] /MyInfo/ send single player info: {(int)player.ClientId}");
         }
         public static void SendGameStart(List<Player> players)
         {
@@ -58,8 +73,7 @@ namespace Shared.Network
                 writer.Put(packet);
                 writer.Put(startTime);
                 player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
-                Console.WriteLine($"[Sender] Send startTime to player if:{player.ClientId}");
-
+                Console.WriteLine($"[Sender] /GameStart/ Send startTime to player if:{player.ClientId}");
             }
         }
 
