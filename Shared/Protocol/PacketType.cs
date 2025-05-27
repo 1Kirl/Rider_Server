@@ -4,12 +4,14 @@ namespace Shared.Protocol
     public enum PacketType : byte
     {
         LetsStart = 0,
-        MyInfo = 1,
+        MyInfo = 1, // 1 bit
         GameStart = 2,
-        PlayerInput = 3, //2 bits
+        PlayerInput = 3, // 2 bits
         MatchFound = 4,
         ClientIsReady = 5,
-        WaitingMember = 6,
-        StopFinding = 7
+        RankingsUpdate = 6,
+        ScoreUpdate = 7, // 3 bits
+        WaitingMember = 8,
+        StopFinding = 9
     }
 }
