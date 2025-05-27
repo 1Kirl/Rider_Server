@@ -8,6 +8,7 @@ using Shared.Network;
 using Shared.Protocol;
 using Shared.Bits;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 public class NetworkManager : INetEventListener
 {
@@ -77,18 +78,18 @@ public class NetworkManager : INetEventListener
         switch (flag)
         {
             case PacketType.LetsStart:
+                Console.WriteLine("[NM] Received: LetsStart");
                 reader.GetByte();
                 matchmaker.AddPlayer(connectedPlayers[peer]
                 ,reader.GetUShort(),
                 reader.GetString());
-                MessageSender.SendPlayerInfo(connectedPlayers[peer]);
 
                 break;
             case PacketType.PlayerInput:
+                Console.WriteLine("[NM] Received: PlayerInput");
                 var sender = connectedPlayers[peer];
                 if (playerToSession.TryGetValue(sender, out var session))
                 {
-                    //byte[] payload = reader.RawData[..reader.AvailableBytes];
                     int inputData = bitReader.ReadBits(3);
                     session.ReceiveInput(sender, inputData);
                 }
@@ -96,11 +97,14 @@ public class NetworkManager : INetEventListener
                 break;
 
             case PacketType.ClientIsReady:
-                var player = connectedPlayers[peer];
-                playerToSession[player].StartGame(player);
+                Console.WriteLine("[NM] Received: ClientIsReady");
+                playerToSession[connectedPlayers[peer]].StartGame(connectedPlayers[peer]);
 
                 break;
-
+            case PacketType.StopFinding:
+                Console.WriteLine("[NM] Received: StopFinding");
+                matchmaker.RemovePlayer(connectedPlayers[peer]);
+                break;
             default:
             
                 break;
@@ -127,10 +131,13 @@ public class NetworkManager : INetEventListener
 
         session.OnPlayerInputReceived += HandlePlayerInput;
         session.OnMatchFound += HandleMatchFound;
-        session.OnGameEnded += HandleGameStart;
+        session.OnGameStart += HandleGameStart;
         session.OnGameEnded += HandleGameEnded;
     }
-
+    public void SendMyInfo(Player player)
+    {
+        MessageSender.SendPlayerInfo(player);
+    }
     public void WaitingMember(List<Player> waitingPlayers)
     {
         MessageSender.SendWaitingPlayers(waitingPlayers);
@@ -148,7 +155,7 @@ public class NetworkManager : INetEventListener
             // {
             //     MessageSender.SendInputPacket(player, inputData);
             // }
-            MessageSender.SendInputPacket(player, inputData);
+            MessageSender.SendInputPacket(player, fromPlayer, inputData);
             //Console.WriteLine("send to "+player.ClientId+" / Send inputData: " + inputData);    
         }
     }

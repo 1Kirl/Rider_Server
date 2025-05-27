@@ -63,6 +63,7 @@ namespace Shared.Network
         public static void SendGameStart(List<Player> players)
         {
             long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 2000;
+            Console.WriteLine($"[Sender] /GameStart/ StartTime will be: {startTime}");
             foreach (var player in players)
             {
                 var packetMaking = new BitWriter();
@@ -73,21 +74,22 @@ namespace Shared.Network
                 writer.Put(packet);
                 writer.Put(startTime);
                 player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
-                Console.WriteLine($"[Sender] /GameStart/ Send startTime to player if:{player.ClientId}");
+                Console.WriteLine($"[Sender] /GameStart/ Send startTime to player id:{player.ClientId}");
             }
         }
 
-        public static void SendInputPacket(Player player, int inputData)
+        public static void SendInputPacket(Player player, Player fromPlayer, int inputData)
         {
             var packetMaking = new BitWriter();
             packetMaking.WriteBits((int)PacketType.PlayerInput, 3);
-            packetMaking.WriteBits((int)player.ClientId & 0b111, 3);
+            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b111, 3);
             packetMaking.WriteBits((int)inputData & 0b111, 3);
             byte[] packet = packetMaking.ToArray();
 
             NetDataWriter writer = new NetDataWriter();
             writer.Put(packet);
             player.Peer.Send(writer, DeliveryMethod.Unreliable);
+            Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
         }
         /*
         public static void SendMatchFound(Player player)

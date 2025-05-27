@@ -3,7 +3,8 @@ using LiteNetLib.Utils; // NetDataWriter
 using System;
 using System.Collections.Generic;
 using Shared.Network;     // MessageSender
-using Shared.Protocol;    // PacketType
+using Shared.Protocol;
+using System.Diagnostics;    // PacketType
 
 public class GameSession
 {
@@ -29,6 +30,7 @@ public class GameSession
     public void StartGame(Player player)
     {
         readyPlayer++;
+        Console.WriteLine($"[GameSession {SessionId}] Whole Players: {players.Count} / ReadyPlayers: {readyPlayer}");
         if (readyPlayer >= players.Count)
         {
             readyPlayer = 0;

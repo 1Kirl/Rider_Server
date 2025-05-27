@@ -21,8 +21,8 @@ public class Matchmaker
         player.CarKind = carKind;
         player.Name = nickname;
         waitingPlayers.Add(player);
+        NetworkManager.Instance.SendMyInfo(player);
         NetworkManager.Instance.WaitingMember(waitingPlayers);
-
         Console.WriteLine($"[Matchmaker] Player added: player #{player.ClientId}, ({waitingPlayers.Count}/{MatchSize})");
 
         if (waitingPlayers.Count >= MatchSize)
@@ -43,6 +43,10 @@ public class Matchmaker
     {
         return sessions.Values.FirstOrDefault(session => session.HasPlayer(player));
     }
-
+    public void RemovePlayer(Player player)
+    {
+        waitingPlayers.Remove(player);
+        NetworkManager.Instance.WaitingMember(waitingPlayers);
+    }
 }
 

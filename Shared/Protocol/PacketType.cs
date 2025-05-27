@@ -9,6 +9,7 @@ namespace Shared.Protocol
         PlayerInput = 3, //2 bits
         MatchFound = 4,
         ClientIsReady = 5,
-        WaitingMember = 6
+        WaitingMember = 6,
+        StopFinding = 7
     }
 }
