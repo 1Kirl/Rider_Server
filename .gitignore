@@ -1,0 +1,65 @@
+# .NET Core / .NET Framework
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+*.sln.iml
+
+# VSCode
+.vscode/
+
+# Mac 시스템 파일
+.DS_Store
+
+# Windows 시스템 파일
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# Logs
+*.log
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Rider logs
+.idea/.idea.*
+
+# JetBrains local history
+.idea/shelf/
+
+# LiteNetLib 외부 패키지 (예: UnityTransport, Newtonsoft 등 외부 DLL)
+*.dll
+*.pdb
+
+# Publish artifacts
+publish/
+*.publishsettings
+
+# Test results
+TestResults/
+*.coverage
+*.coveragexml
+
+# User secrets
+secrets.json
+
+# Temp files
+*.tmp
+*.bak
+*.old
+*.swp
+*.swo
