@@ -91,6 +91,26 @@ namespace Shared.Network
             player.Peer.Send(writer, DeliveryMethod.Unreliable);
             Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
         }
+
+        public static void SendRankings(List<Player> sortedPlayers) {
+            foreach (var receiver in sortedPlayers) {
+                var packetHeader = new BitWriter();
+                packetHeader.WriteBits((int)PacketType.RankingsUpdate, 3);
+                byte[] header = packetHeader.ToArray();
+
+                var writer = new NetDataWriter();
+                writer.Put(header);
+                writer.Put(sortedPlayers.Count);
+
+                foreach (var p in sortedPlayers) {
+                    writer.Put(p.ClientId);
+                    writer.Put(p.CurrentScore);
+                    writer.Put(p.Name);
+                }
+                receiver.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
+            }
+        }
+
         /*
         public static void SendMatchFound(Player player)
         {

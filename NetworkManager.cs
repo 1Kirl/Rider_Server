@@ -101,10 +101,21 @@ public class NetworkManager : INetEventListener
                 playerToSession[connectedPlayers[peer]].StartGame(connectedPlayers[peer]);
 
                 break;
+
+
+            case PacketType.ScoreUpdate:
+                var scoringPlayer = connectedPlayers[peer];
+                ushort score = (ushort)bitReader.ReadBits(16); // ���� ���� (ushort)
+                scoringPlayer.CurrentScore = score;
+
+                UpdateRankings();
+                break;
+
             case PacketType.StopFinding:
                 Console.WriteLine("[NM] Received: StopFinding");
                 matchmaker.RemovePlayer(connectedPlayers[peer]);
                 break;
+                
             default:
             
                 break;
@@ -168,6 +179,15 @@ public class NetworkManager : INetEventListener
     {
         //MessageSender.SendGameEnd(players);
     }
+
+    private void UpdateRankings() {
+        var sortedPlayers = connectedPlayers.Values
+            .OrderByDescending(p => p.CurrentScore)
+            .ToList();
+        MessageSender.SendRankings(sortedPlayers);
+    }
+
+
 
 
     public void OnNetworkError(IPEndPoint endPoint, SocketError socketError) => Console.WriteLine("Error");

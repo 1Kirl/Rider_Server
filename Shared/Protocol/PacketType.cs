@@ -13,5 +13,6 @@ namespace Shared.Protocol
         ScoreUpdate = 7, // 3 bits
         WaitingMember = 8,
         StopFinding = 9
+
     }
 }
