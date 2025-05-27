@@ -8,6 +8,8 @@ namespace Shared.Protocol
         GameStart = 2,
         PlayerInput = 3, //2 bits
         MatchFound = 4,
-        ClientIsReady = 5
+        ClientIsReady = 5,
+        ScoreUpdate = 6,
+        RankingsUpdate = 7
     }
 }

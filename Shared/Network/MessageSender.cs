@@ -75,6 +75,26 @@ namespace Shared.Network
             writer.Put(packet);
             player.Peer.Send(writer, DeliveryMethod.Unreliable);
         }
+
+        public static void SendRankings(List<Player> sortedPlayers) {
+            foreach (var receiver in sortedPlayers) {
+                var packetHeader = new BitWriter();
+                packetHeader.WriteBits((int)PacketType.RankingsUpdate, 3);
+                byte[] header = packetHeader.ToArray();
+
+                var writer = new NetDataWriter();
+                writer.Put(header);
+                writer.Put(sortedPlayers.Count);
+
+                foreach (var p in sortedPlayers) {
+                    writer.Put(p.ClientId);
+                    writer.Put(p.CurrentScore);
+                    writer.Put(p.Name);
+                }
+                receiver.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
+            }
+        }
+
         /*
         public static void SendMatchFound(Player player)
         {
