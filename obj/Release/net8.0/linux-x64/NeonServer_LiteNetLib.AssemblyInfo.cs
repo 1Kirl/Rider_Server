@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NeonServer_LiteNetLib")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+38deed37a7f7bf8c843547d42ccba1b1f698b3bd")]
 [assembly: System.Reflection.AssemblyProductAttribute("NeonServer_LiteNetLib")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NeonServer_LiteNetLib")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

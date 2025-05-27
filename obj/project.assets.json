@@ -56,11 +56,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\NeonServer_LiteNetLib.csproj",
+      "projectUniqueName": "/Users/kirl/Desktop/NeonServer_LiteNetLib/3D_Rider_Server/NeonServer_LiteNetLib.csproj",
       "projectName": "NeonServer_LiteNetLib",
-      "projectPath": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\NeonServer_LiteNetLib.csproj",
-      "packagesPath": "C:\\Users\\rhwjd\\.nuget\\packages\\",
-      "outputPath": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\obj\\",
+      "projectPath": "/Users/kirl/Desktop/NeonServer_LiteNetLib/3D_Rider_Server/NeonServer_LiteNetLib.csproj",
+      "packagesPath": "/Users/kirl/.nuget/packages/",
+      "outputPath": "/Users/kirl/Desktop/NeonServer_LiteNetLib/3D_Rider_Server/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

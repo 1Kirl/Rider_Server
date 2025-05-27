@@ -8,6 +8,7 @@ using Shared.Network;
 using Shared.Protocol;
 using Shared.Bits;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 public class NetworkManager : INetEventListener
 {
@@ -77,18 +78,18 @@ public class NetworkManager : INetEventListener
         switch (flag)
         {
             case PacketType.LetsStart:
+                Console.WriteLine("[NM] Received: LetsStart");
                 reader.GetByte();
                 matchmaker.AddPlayer(connectedPlayers[peer]
                 ,reader.GetUShort(),
                 reader.GetString());
-                MessageSender.SendPlayerInfo(connectedPlayers[peer]);
 
                 break;
             case PacketType.PlayerInput:
+                Console.WriteLine("[NM] Received: PlayerInput");
                 var sender = connectedPlayers[peer];
                 if (playerToSession.TryGetValue(sender, out var session))
                 {
-                    //byte[] payload = reader.RawData[..reader.AvailableBytes];
                     int inputData = bitReader.ReadBits(3);
                     session.ReceiveInput(sender, inputData);
                 }
@@ -96,19 +97,25 @@ public class NetworkManager : INetEventListener
                 break;
 
             case PacketType.ClientIsReady:
-                var player = connectedPlayers[peer];
-                playerToSession[player].StartGame(player);
+                Console.WriteLine("[NM] Received: ClientIsReady");
+                playerToSession[connectedPlayers[peer]].StartGame(connectedPlayers[peer]);
 
                 break;
 
+
             case PacketType.ScoreUpdate:
                 var scoringPlayer = connectedPlayers[peer];
-                ushort score = (ushort)bitReader.ReadBits(16); // Á¡¼ö ¼ö½Å (ushort)
+                ushort score = (ushort)bitReader.ReadBits(16); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ushort)
                 scoringPlayer.CurrentScore = score;
 
                 UpdateRankings();
                 break;
 
+            case PacketType.StopFinding:
+                Console.WriteLine("[NM] Received: StopFinding");
+                matchmaker.RemovePlayer(connectedPlayers[peer]);
+                break;
+                
             default:
             
                 break;
@@ -116,15 +123,16 @@ public class NetworkManager : INetEventListener
         reader.Recycle();
     }
 
+
     public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
     {
         if (connectedPlayers.Remove(peer, out var player))
         {
             Console.WriteLine($"[Server] Player disconnected: {player.ClientId}");
         }
-        Console.WriteLine("Disconnected");    
+        Console.WriteLine("Disconnected");
     }
-    
+
     public void RegisterSession(GameSession session)
     {
         foreach (var player in session.GetPlayers())
@@ -134,9 +142,18 @@ public class NetworkManager : INetEventListener
 
         session.OnPlayerInputReceived += HandlePlayerInput;
         session.OnMatchFound += HandleMatchFound;
-        session.OnGameEnded += HandleGameStart;
+        session.OnGameStart += HandleGameStart;
         session.OnGameEnded += HandleGameEnded;
     }
+    public void SendMyInfo(Player player)
+    {
+        MessageSender.SendPlayerInfo(player);
+    }
+    public void WaitingMember(List<Player> waitingPlayers)
+    {
+        MessageSender.SendWaitingPlayers(waitingPlayers);
+    }
+
     private void HandleGameStart(List<Player> players)
     {
         MessageSender.SendGameStart(players);
@@ -149,7 +166,7 @@ public class NetworkManager : INetEventListener
             // {
             //     MessageSender.SendInputPacket(player, inputData);
             // }
-            MessageSender.SendInputPacket(player, inputData);
+            MessageSender.SendInputPacket(player, fromPlayer, inputData);
             //Console.WriteLine("send to "+player.ClientId+" / Send inputData: " + inputData);    
         }
     }
