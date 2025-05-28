@@ -30,7 +30,7 @@ namespace Shared.Network
             return $"[Player] ClientId={ClientId}, Name={Name}";
         }
 
-        public int CurrentScore { get; set; }
+        public ushort CurrentScore { get; set; }
         //public int CurrentRank { get; set; } 
     }
 }

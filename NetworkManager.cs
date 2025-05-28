@@ -108,7 +108,7 @@ public class NetworkManager : INetEventListener
                 ushort score = (ushort)bitReader.ReadBits(16); // ���� ���� (ushort)
                 scoringPlayer.CurrentScore = score;
 
-                UpdateRankings();
+                UpdateRankings(scoringPlayer);
                 break;
 
             case PacketType.StopFinding:
@@ -180,10 +180,12 @@ public class NetworkManager : INetEventListener
         //MessageSender.SendGameEnd(players);
     }
 
-    private void UpdateRankings() {
-        var sortedPlayers = connectedPlayers.Values
+    private void UpdateRankings(Player fromPlayer)
+    {
+        var sortedPlayers = playerToSession[fromPlayer].GetPlayers()
             .OrderByDescending(p => p.CurrentScore)
             .ToList();
+            
         MessageSender.SendRankings(sortedPlayers);
     }
 

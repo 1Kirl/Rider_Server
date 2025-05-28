@@ -93,13 +93,14 @@ namespace Shared.Network
         }
 
         public static void SendRankings(List<Player> sortedPlayers) {
-            foreach (var receiver in sortedPlayers) {
-                var packetHeader = new BitWriter();
-                packetHeader.WriteBits((int)PacketType.RankingsUpdate, 3);
-                byte[] header = packetHeader.ToArray();
+            foreach (var receiver in sortedPlayers)
+            {
+                var packetMaking = new BitWriter();
+                packetMaking.WriteBits((int)PacketType.RankingsUpdate, 3);
+                byte[] packet = packetMaking.ToArray();
 
                 var writer = new NetDataWriter();
-                writer.Put(header);
+                writer.Put(packet);
                 writer.Put(sortedPlayers.Count);
 
                 foreach (var p in sortedPlayers) {
