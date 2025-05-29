@@ -12,7 +12,8 @@ namespace Shared.Protocol
         RankingsUpdate = 6,
         ScoreUpdate = 7, // 3 bits
         WaitingMember = 8,
-        StopFinding = 9
+        StopFinding = 9,
+        GameEnd = 10
 
     }
 }

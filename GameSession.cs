@@ -4,16 +4,19 @@ using System;
 using System.Collections.Generic;
 using Shared.Network;     // MessageSender
 using Shared.Protocol;
-using System.Diagnostics;    // PacketType
+using System.Diagnostics;
+using System.Net.Sockets;
+using System.Xml.Serialization;    // PacketType
 
 public class GameSession
 {
     public int SessionId { get; }
     public event Action<List<Player>>? OnMatchFound;
     public event Action<List<Player>>? OnGameEnded;
-    public event Action<List<Player>>? OnGameStart;
+    public event Action<List<Player>, long>? OnGameStart;
     public event Action<Player, int, GameSession>? OnPlayerInputReceived;
-
+    private long startTime = 0;
+    private long gamePlayTime = 0;
     private List<Player> players;
     private int readyPlayer = 0;
     public GameSession(int sessionId, List<Player> players)
@@ -34,8 +37,23 @@ public class GameSession
         if (readyPlayer >= players.Count)
         {
             readyPlayer = 0;
-            OnGameStart?.Invoke(players);
+            startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 2000;
+            OnGameStart?.Invoke(players, startTime);
+            this.GameTimer();
         }
+    }
+    private async void GameTimer()
+    {
+        gamePlayTime = 60000; // 60초
+        var delay = startTime - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        if (delay > 0)
+            await Task.Delay((int)delay); // 게임 시작까지 대기
+
+        Console.WriteLine($"[GameSession {SessionId}] Game started!");
+
+        await Task.Delay((int)gamePlayTime); // 게임 플레이 시간 대기
+
+        EndGame(); // 게임 종료 처리
     }
     public void EndGame()
     {

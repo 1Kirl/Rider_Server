@@ -154,9 +154,9 @@ public class NetworkManager : INetEventListener
         MessageSender.SendWaitingPlayers(waitingPlayers);
     }
 
-    private void HandleGameStart(List<Player> players)
+    private void HandleGameStart(List<Player> players, long startTime)
     {
-        MessageSender.SendGameStart(players);
+        MessageSender.SendGameStart(players, startTime);
     }
     private void HandlePlayerInput(Player fromPlayer, int inputData, GameSession session)
     {
@@ -177,7 +177,7 @@ public class NetworkManager : INetEventListener
 
     private void HandleGameEnded(List<Player> players)
     {
-        //MessageSender.SendGameEnd(players);
+        MessageSender.SendGameEnd(players);
     }
 
     private void UpdateRankings(Player fromPlayer)
@@ -185,7 +185,6 @@ public class NetworkManager : INetEventListener
         var sortedPlayers = playerToSession[fromPlayer].GetPlayers()
             .OrderByDescending(p => p.CurrentScore)
             .ToList();
-            
         MessageSender.SendRankings(sortedPlayers);
     }
 

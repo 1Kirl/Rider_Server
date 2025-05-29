@@ -11,7 +11,6 @@ public class Matchmaker
     private readonly List<Player> waitingPlayers = new List<Player>();
     private readonly Dictionary<int, GameSession> sessions = new Dictionary<int, GameSession>();
     private int nextSessionId = 0;
-    private ushort inGameClientId = 0;
     private const int MatchSize = 2;
     private ushort nextClientId = 0;
     public void AddPlayer(Player player, ushort carKind, string nickname)
@@ -46,7 +45,7 @@ public class Matchmaker
     public void RemovePlayer(Player player)
     {
         waitingPlayers.Remove(player);
-        NetworkManager.Instance.WaitingMember(waitingPlayers);
+        NetworkManager.Instance.WaitingMember(waitingPlayers); //re-send the rest of the waiting players
     }
 }
 

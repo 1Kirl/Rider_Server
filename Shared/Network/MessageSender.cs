@@ -46,7 +46,7 @@ namespace Shared.Network
             }
         }
 
-        
+
         // server says "it's your info now!"
         public static void SendPlayerInfo(Player player)
         {
@@ -60,9 +60,9 @@ namespace Shared.Network
             player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
             Console.WriteLine($"[Sender] /MyInfo/ send single player info: {(int)player.ClientId}");
         }
-        public static void SendGameStart(List<Player> players)
+        public static void SendGameStart(List<Player> players, long startTime)
         {
-            long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 2000;
+
             Console.WriteLine($"[Sender] /GameStart/ StartTime will be: {startTime}");
             foreach (var player in players)
             {
@@ -92,7 +92,8 @@ namespace Shared.Network
             Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
         }
 
-        public static void SendRankings(List<Player> sortedPlayers) {
+        public static void SendRankings(List<Player> sortedPlayers)
+        {
             foreach (var receiver in sortedPlayers)
             {
                 var packetMaking = new BitWriter();
@@ -103,12 +104,29 @@ namespace Shared.Network
                 writer.Put(packet);
                 writer.Put(sortedPlayers.Count);
 
-                foreach (var p in sortedPlayers) {
+                foreach (var p in sortedPlayers)
+                {
                     writer.Put(p.ClientId);
                     writer.Put(p.CurrentScore);
                     writer.Put(p.Name);
                 }
                 receiver.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
+            }
+        }
+
+        public static void SendGameEnd(List<Player> players)
+        {
+            Console.WriteLine($"[Sender] /GameEnd/ game will be ended in 3 seconds");
+            foreach (var player in players)
+            {
+                var packetMaking = new BitWriter();
+                packetMaking.WriteBits((int)PacketType.GameEnd, 3);
+                byte[] packet = packetMaking.ToArray();
+
+                NetDataWriter writer = new NetDataWriter();
+                writer.Put(packet);
+                player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
+                Console.WriteLine($"[Sender] /GameEnd/ Send GameEnd to player id:{player.ClientId}");
             }
         }
 
