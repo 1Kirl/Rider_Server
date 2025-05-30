@@ -32,5 +32,7 @@ namespace Shared.Network
 
         public ushort CurrentScore { get; set; }
         //public int CurrentRank { get; set; } 
+        public long FinishTimestamp { get; set; } = long.MaxValue;
+
     }
 }

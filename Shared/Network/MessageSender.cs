@@ -130,6 +130,29 @@ namespace Shared.Network
             }
         }
 
+        public static void SendFinalResultSummary(List<Player> playersInOrder) {
+            foreach (var player in playersInOrder) {
+                var packetMaking = new BitWriter();
+                packetMaking.WriteBits((int)PacketType.ServerResultSummary, 4); // 4bit
+                byte[] packet = packetMaking.ToArray();
+
+                NetDataWriter writer = new NetDataWriter();
+                writer.Put(packet);
+                writer.Put(playersInOrder.Count);
+
+                for (int i = 0; i < playersInOrder.Count; i++) {
+                    var p = playersInOrder[i];
+                    writer.Put(p.ClientId);
+                    writer.Put(p.Name);
+                    writer.Put(p.CurrentScore);
+                    writer.Put((byte)(i + 1)); // arrive order 1~
+                }
+
+                player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
+                Console.WriteLine($"[Sender] /FinalResultSummary/ Sent to {player.ClientId}");
+            }
+        }
+
         /*
         public static void SendMatchFound(Player player)
         {

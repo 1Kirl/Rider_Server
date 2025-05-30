@@ -74,5 +74,8 @@ public class GameSession
     {
         return players;
     }
+    public long GetStartTime() {
+        return startTime;
+    }
 }
 
