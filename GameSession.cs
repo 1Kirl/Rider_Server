@@ -19,6 +19,8 @@ public class GameSession
     private long gamePlayTime = 0;
     private List<Player> players;
     private int readyPlayer = 0;
+    private bool isEarlyEndTriggered = false;
+
     public GameSession(int sessionId, List<Player> players)
     {
         this.SessionId = sessionId;
@@ -55,11 +57,31 @@ public class GameSession
 
         EndGame(); // 게임 종료 처리
     }
-    public void EndGame()
-    {
+    public void EndGame() {
         Console.WriteLine($"[GameSession {SessionId}] Game ended.");
+
+        // 1. 도달 여부 분리
+        var finishers = players.Where(p => p.HasReachedFinish).ToList();
+        var nonFinishers = players.Where(p => !p.HasReachedFinish).ToList();
+
+        // 2. 도달자: 도착 시간 기준 정렬
+        finishers.Sort((a, b) => a.FinishTimestamp.CompareTo(b.FinishTimestamp));
+
+        // 3. arrivalRank 부여
+        for (int i = 0; i < finishers.Count; i++) {
+            finishers[i].ArrivalRank = i + 1; // 1등부터
+        }
+
+        // 4. 미도달자는 점수만으로 정렬
+        var sorted = finishers.Concat(nonFinishers.OrderByDescending(p => p.CurrentScore)).ToList();
+
+        // 5. 결과 전송 (보너스 점수 계산은 클라이언트에서)
+        MessageSender.SendFinalResultSummary(sorted);
+
+        // 6. UI 종료 트리거 등
         OnGameEnded?.Invoke(players);
     }
+
     public void ReceiveInput(Player fromPlayer, int inputData)
     {
         // 서버는 물리 연산 없이 입력만 중계할 경우
@@ -77,5 +99,21 @@ public class GameSession
     public long GetStartTime() {
         return startTime;
     }
+
+    public void StartEarlyEndTimerIfNotRunning() {
+        if (isEarlyEndTriggered) return;
+        isEarlyEndTriggered = true;
+
+        // 2번: CountdownStart 패킷 전송 (서버 시간 기준)
+        long countdownStartTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        MessageSender.SendCountdownStart(players, countdownStartTime);
+
+        Task.Run(async () =>
+        {
+            await Task.Delay(10000); // 10초 대기
+            EndGame();
+        });
+    }
+
 }
 

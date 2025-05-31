@@ -15,6 +15,7 @@ namespace Shared.Protocol
         StopFinding = 9,
         GameEnd = 10,
         ServerResultSummary = 11,
-        ReachedFinishLine = 12
+        ReachedFinishLine = 12,
+        CountdownStart = 13
     }
 }

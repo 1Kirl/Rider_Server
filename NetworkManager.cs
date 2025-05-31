@@ -95,19 +95,24 @@ public class NetworkManager : INetEventListener
                 matchmaker.RemovePlayer(connectedPlayers[peer]);
                 break;
 
-            case PacketType.ReachedFinishLine:
-                var player = connectedPlayers[peer];
-                ushort finishscore = reader.GetUShort();
-                player.CurrentScore = finishscore;
+            case PacketType.ReachedFinishLine: {
+                    var player = connectedPlayers[peer];
+                    ushort finishscore = reader.GetUShort();
+                    player.CurrentScore = finishscore;
+                    player.HasReachedFinish = true;
 
-                if (playerToSession.TryGetValue(player, out var finishsession)) {
-                    long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                    long relativeFinishTime = now - finishsession.GetStartTime(); // time since game start
-                    player.FinishTimestamp = relativeFinishTime;
+                    if (playerToSession.TryGetValue(player, out var finishsession)) {
+                        long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                        long relativeFinishTime = now - finishsession.GetStartTime();
+                        player.FinishTimestamp = relativeFinishTime;
 
-                    Console.WriteLine($"[Server] Player {player.ClientId} reached finish line at +{relativeFinishTime}ms");
+                        Console.WriteLine($"[Server] Player {player.ClientId} reached finish line at +{relativeFinishTime}ms");
+
+                        // 1번: 최초 도착자 기준 타이머 시작
+                        finishsession.StartEarlyEndTimerIfNotRunning();
+                    }
+                    break;
                 }
-                break;
 
             default:
                 break;
@@ -158,11 +163,6 @@ public class NetworkManager : INetEventListener
     private void HandleGameEnded(List<Player> players) {
         MessageSender.SendGameEnd(players);
 
-        var sortedByArrival = players
-            .OrderBy(p => p.FinishTimestamp) // sort by time of arrival
-            .ToList();
-
-        MessageSender.SendFinalResultSummary(sortedByArrival);
     }
 
     private void UpdateRankings(Player fromPlayer) {

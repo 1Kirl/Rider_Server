@@ -145,12 +145,26 @@ namespace Shared.Network
                     writer.Put(p.ClientId);
                     writer.Put(p.Name);
                     writer.Put(p.CurrentScore);
-                    writer.Put((byte)(i + 1)); // arrive order 1~
+                    writer.Put((byte)(p.ArrivalRank > 0 ? p.ArrivalRank : 0));
                 }
 
                 player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
                 Console.WriteLine($"[Sender] /FinalResultSummary/ Sent to {player.ClientId}");
             }
+        }
+
+        // 서버에서 10초 남음 알림
+        public static void SendCountdownStart(List<Player> players, long serverStartTimestamp) {
+            var writer = new NetDataWriter();
+            var packetMaking = new BitWriter();
+            packetMaking.WriteBits((int)PacketType.CountdownStart, 4); // new enum
+
+            byte[] packet = packetMaking.ToArray();
+            writer.Put(packet);
+            writer.Put(serverStartTimestamp); // unix ms time 기준
+
+            foreach (var player in players)
+                player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
         }
 
         /*
