@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|c:\\kojungjun_git\\neoncarserver\\rider_server\\gamesession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|solutionrelative:gamesession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|c:\\kojungjun_git\\neoncarserver\\rider_server\\networkmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|solutionrelative:networkmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -15,8 +19,8 @@
       "RelativeMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|solutionrelative:shared\\network\\packetparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|c:\\kojungjun_git\\neoncarserver\\rider_server\\gamesession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|solutionrelative:gamesession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|c:\\kojungjun_git\\neoncarserver\\rider_server\\shared\\protocol\\packettype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|solutionrelative:shared\\protocol\\packettype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|c:\\kojungjun_git\\neoncarserver\\rider_server\\matchmaker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -25,10 +29,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|c:\\kojungjun_git\\neoncarserver\\rider_server\\shared\\network\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|solutionrelative:shared\\network\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|c:\\kojungjun_git\\neoncarserver\\rider_server\\shared\\protocol\\packettype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|solutionrelative:shared\\protocol\\packettype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3BE723E2-D871-48CE-1E67-C02A323B5C3C}|NeonServer_LiteNetLib.csproj|c:\\kojungjun_git\\neoncarserver\\rider_server\\shared\\bits\\bitreader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -50,82 +50,82 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "PacketParser.cs",
-              "DocumentMoniker": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Shared\\Network\\PacketParser.cs",
-              "RelativeDocumentMoniker": "Shared\\Network\\PacketParser.cs",
-              "ToolTip": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Shared\\Network\\PacketParser.cs",
-              "RelativeToolTip": "Shared\\Network\\PacketParser.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-26T08:51:38.977Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Player.cs",
-              "DocumentMoniker": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Shared\\Network\\Player.cs",
-              "RelativeDocumentMoniker": "Shared\\Network\\Player.cs",
-              "ToolTip": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Shared\\Network\\Player.cs",
-              "RelativeToolTip": "Shared\\Network\\Player.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-26T08:51:39.365Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "NetworkManager.cs",
               "DocumentMoniker": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\NetworkManager.cs",
               "RelativeDocumentMoniker": "NetworkManager.cs",
               "ToolTip": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\NetworkManager.cs",
               "RelativeToolTip": "NetworkManager.cs",
-              "ViewState": "AQIAAKQAAAAAAAAAAAAAAKEAAAAFAAAA",
+              "ViewState": "AQIAAFsAAAAAAAAAAAAAAHAAAAAVAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-26T08:50:51.933Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
+              "Title": "PacketType.cs",
+              "DocumentMoniker": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Shared\\Protocol\\PacketType.cs",
+              "RelativeDocumentMoniker": "Shared\\Protocol\\PacketType.cs",
+              "ToolTip": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Shared\\Protocol\\PacketType.cs",
+              "RelativeToolTip": "Shared\\Protocol\\PacketType.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T08:51:40.701Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PacketParser.cs",
+              "DocumentMoniker": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Shared\\Network\\PacketParser.cs",
+              "RelativeDocumentMoniker": "Shared\\Network\\PacketParser.cs",
+              "ToolTip": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Shared\\Network\\PacketParser.cs",
+              "RelativeToolTip": "Shared\\Network\\PacketParser.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAQwBgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T08:51:38.977Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "MessageSender.cs",
               "DocumentMoniker": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Shared\\Network\\MessageSender.cs",
               "RelativeDocumentMoniker": "Shared\\Network\\MessageSender.cs",
               "ToolTip": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Shared\\Network\\MessageSender.cs",
               "RelativeToolTip": "Shared\\Network\\MessageSender.cs",
-              "ViewState": "AQIAADsAAAAAAAAAAAAAAEEAAAAMAAAA",
+              "ViewState": "AQIAAAEAAAAAAAAAAAAAACwAAAAQAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-26T08:51:38.557Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Matchmaker.cs",
               "DocumentMoniker": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Matchmaker.cs",
               "RelativeDocumentMoniker": "Matchmaker.cs",
               "ToolTip": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Matchmaker.cs",
               "RelativeToolTip": "Matchmaker.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB4AAAAdAAAA",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAABUAAAAjAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-26T08:51:21.076Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "GameSession.cs",
               "DocumentMoniker": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\GameSession.cs",
               "RelativeDocumentMoniker": "GameSession.cs",
               "ToolTip": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\GameSession.cs",
               "RelativeToolTip": "GameSession.cs",
-              "ViewState": "AQIAACYAAAAAAAAAAAAswDQAAAAiAAAA",
+              "ViewState": "AQIAAF4AAAAAAAAAAAAAAGQAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-26T08:51:22.691Z",
               "EditorCaption": ""
@@ -133,15 +133,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "PacketType.cs",
-              "DocumentMoniker": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Shared\\Protocol\\PacketType.cs",
-              "RelativeDocumentMoniker": "Shared\\Protocol\\PacketType.cs",
-              "ToolTip": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Shared\\Protocol\\PacketType.cs",
-              "RelativeToolTip": "Shared\\Protocol\\PacketType.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAABAAAA",
+              "Title": "Player.cs",
+              "DocumentMoniker": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Shared\\Network\\Player.cs",
+              "RelativeDocumentMoniker": "Shared\\Network\\Player.cs",
+              "ToolTip": "C:\\Kojungjun_Git\\NeonCarServer\\Rider_Server\\Shared\\Network\\Player.cs",
+              "RelativeToolTip": "Shared\\Network\\Player.cs",
+              "ViewState": "AQIAABoAAAAAAAAAAAAAACMAAABCAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-26T08:51:40.701Z",
+              "WhenOpened": "2025-05-26T08:51:39.365Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             },
             {
               "$type": "Document",
@@ -153,8 +157,7 @@
               "RelativeToolTip": "Shared\\Bits\\Bitreader.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-26T08:51:36.907Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-26T08:51:36.907Z"
             },
             {
               "$type": "Document",
@@ -166,8 +169,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-26T08:51:20.222Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-26T08:51:20.222Z"
             },
             {
               "$type": "Document",
@@ -180,10 +182,6 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-26T08:51:37.457Z"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }

@@ -31,6 +31,10 @@ namespace Shared.Network
         }
 
         public ushort CurrentScore { get; set; }
-        //public int CurrentRank { get; set; } 
+
+        public bool HasReachedFinish { get; set; } = false;
+        public long FinishTimestamp { get; set; } = long.MaxValue;
+
+        public int ArrivalRank { get; set; } = -1; //도달하지 않은 경우 -1 
     }
 }

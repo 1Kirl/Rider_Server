@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Shared.Protocol;
 using Shared.Bits;
 using System.Dynamic;
+using System.Numerics;
+
 
 namespace Shared.Network
 {
@@ -99,6 +101,28 @@ namespace Shared.Network
             player.Peer.Send(writer, DeliveryMethod.Unreliable);
             Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
         }
+        public static void SendTransformPacket(Player player, Player fromPlayer, Vector3 pos, Quaternion rot)
+        {
+            var packetMaking = new BitWriter();
+            packetMaking.WriteBits((int)PacketType.TransformUpdate, 4);
+            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b111, 3);
+            byte[] packet = packetMaking.ToArray();
+
+            NetDataWriter writer = new NetDataWriter();
+            writer.Put(packet);
+
+            writer.Put(pos.X);
+            writer.Put(pos.Y);
+            writer.Put(pos.Z);
+
+            writer.Put(rot.X);
+            writer.Put(rot.Y);
+            writer.Put(rot.Z);
+            writer.Put(rot.W);
+
+            player.Peer.Send(writer, DeliveryMethod.Unreliable);
+            Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
+        }
 
         public static void SendRankings(List<Player> sortedPlayers)
         {
@@ -136,6 +160,43 @@ namespace Shared.Network
                 player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
                 Console.WriteLine($"[Sender] /GameEnd/ Send GameEnd to player id:{player.ClientId}");
             }
+        }
+
+        public static void SendFinalResultSummary(List<Player> playersInOrder) {
+            foreach (var player in playersInOrder) {
+                var packetMaking = new BitWriter();
+                packetMaking.WriteBits((int)PacketType.ServerResultSummary, 4); // 4bit
+                byte[] packet = packetMaking.ToArray();
+
+                NetDataWriter writer = new NetDataWriter();
+                writer.Put(packet);
+                writer.Put(playersInOrder.Count);
+
+                for (int i = 0; i < playersInOrder.Count; i++) {
+                    var p = playersInOrder[i];
+                    writer.Put(p.ClientId);
+                    writer.Put(p.Name);
+                    writer.Put(p.CurrentScore);
+                    writer.Put((byte)(p.ArrivalRank > 0 ? p.ArrivalRank : 0));
+                }
+
+                player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
+                Console.WriteLine($"[Sender] /FinalResultSummary/ Sent to {player.ClientId}");
+            }
+        }
+
+        // 서버에서 10초 남음 알림
+        public static void SendCountdownStart(List<Player> players, long serverStartTimestamp) {
+            var writer = new NetDataWriter();
+            var packetMaking = new BitWriter();
+            packetMaking.WriteBits((int)PacketType.CountdownStart, 4); // new enum
+
+            byte[] packet = packetMaking.ToArray();
+            writer.Put(packet);
+            writer.Put(serverStartTimestamp); // unix ms time 기준
+
+            foreach (var player in players)
+                player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
         }
 
         /*

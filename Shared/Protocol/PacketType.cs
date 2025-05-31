@@ -13,7 +13,10 @@ namespace Shared.Protocol
         ScoreUpdate = 7, // 3 bits
         WaitingMember = 8,
         StopFinding = 9,
-        GameEnd = 10
-
+        GameEnd = 10,
+        ServerResultSummary = 11,
+        ReachedFinishLine = 12,
+        CountdownStart = 13,
+        TransformUpdate = 14
     }
 }
