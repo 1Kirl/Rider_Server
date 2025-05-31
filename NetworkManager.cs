@@ -97,6 +97,7 @@ public class NetworkManager : INetEventListener
                 break;
 
             case PacketType.ReachedFinishLine: {
+                    reader.GetByte(); // dump padding
                     var player = connectedPlayers[peer];
                     ushort finishscore = reader.GetUShort();
                     player.CurrentScore = finishscore;
@@ -109,7 +110,7 @@ public class NetworkManager : INetEventListener
 
                         Console.WriteLine($"[Server] Player {player.ClientId} reached finish line at +{relativeFinishTime}ms");
 
-                        // 1¹ø: ÃÖÃÊ µµÂøÀÚ ±âÁØ Å¸ÀÌ¸Ó ½ÃÀÛ
+                        // 1ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
                         finishsession.StartEarlyEndTimerIfNotRunning();
                     }
                     break;
