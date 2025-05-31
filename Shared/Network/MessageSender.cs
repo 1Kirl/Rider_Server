@@ -37,7 +37,7 @@ namespace Shared.Network
         {
             var packetMaking = new BitWriter();
             packetMaking.WriteBits((int)PacketType.WaitingMember, 4);
-            packetMaking.WriteBits((int)waitingPlayers.Count, 3);
+            packetMaking.WriteBits((int)waitingPlayers.Count, 4);
             byte[] packet = packetMaking.ToArray();
             NetDataWriter writer = new NetDataWriter();
             writer.Put(packet);
@@ -75,6 +75,14 @@ namespace Shared.Network
                 NetDataWriter writer = new NetDataWriter();
                 writer.Put(packet);
                 writer.Put(startTime);
+                writer.Put(players.Count);
+
+                foreach (var p in players)
+                {
+                    writer.Put(p.ClientId);
+                    writer.Put(p.CurrentScore);
+                    writer.Put(p.Name);
+                }
                 player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
                 Console.WriteLine($"[Sender] /GameStart/ Send startTime to player id:{player.ClientId}");
             }
