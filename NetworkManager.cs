@@ -97,6 +97,7 @@ public class NetworkManager : INetEventListener
                 break;
 
             case PacketType.ReachedFinishLine: {
+                    Console.WriteLine("[NM] Received: FinishFlag");
                     reader.GetByte(); // dump padding
                     var player = connectedPlayers[peer];
                     ushort finishscore = reader.GetUShort();

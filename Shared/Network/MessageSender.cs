@@ -197,6 +197,7 @@ namespace Shared.Network
 
             foreach (var player in players)
                 player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
+            Console.WriteLine("Start counting");
         }
 
         /*
