@@ -16,6 +16,7 @@ namespace Shared.Protocol
         GameEnd = 10,
         ServerResultSummary = 11,
         ReachedFinishLine = 12,
-        CountdownStart = 13
+        CountdownStart = 13,
+        TransformUpdate = 14
     }
 }
