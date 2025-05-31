@@ -17,7 +17,7 @@ namespace Shared.Network
                 foreach (var otherPlayer in players)
                 {
                     var packetMaking = new BitWriter();
-                    packetMaking.WriteBits((int)PacketType.MatchFound, 3);
+                    packetMaking.WriteBits((int)PacketType.MatchFound, 4);
                     packetMaking.WriteBits((int)players.Count, 3);
                     byte[] packet = packetMaking.ToArray();
 
@@ -34,8 +34,8 @@ namespace Shared.Network
         public static void SendWaitingPlayers(List<Player> waitingPlayers)
         {
             var packetMaking = new BitWriter();
-            packetMaking.WriteBits((int)PacketType.WaitingMember, 3);
-            packetMaking.WriteBits((int)waitingPlayers.Count, 3);
+            packetMaking.WriteBits((int)PacketType.WaitingMember, 4);
+            packetMaking.WriteBits((int)waitingPlayers.Count, 4);
             byte[] packet = packetMaking.ToArray();
             NetDataWriter writer = new NetDataWriter();
             writer.Put(packet);
@@ -51,7 +51,7 @@ namespace Shared.Network
         public static void SendPlayerInfo(Player player)
         {
             var packetMaking = new BitWriter();
-            packetMaking.WriteBits((int)PacketType.MyInfo, 3);
+            packetMaking.WriteBits((int)PacketType.MyInfo, 4);
             packetMaking.WriteBits((int)player.ClientId & 0b111, 3);
             byte[] packet = packetMaking.ToArray();
 
@@ -67,12 +67,20 @@ namespace Shared.Network
             foreach (var player in players)
             {
                 var packetMaking = new BitWriter();
-                packetMaking.WriteBits((int)PacketType.GameStart, 3);
+                packetMaking.WriteBits((int)PacketType.GameStart, 4);
                 byte[] packet = packetMaking.ToArray();
 
                 NetDataWriter writer = new NetDataWriter();
                 writer.Put(packet);
                 writer.Put(startTime);
+                writer.Put(players.Count);
+
+                foreach (var p in players)
+                {
+                    writer.Put(p.ClientId);
+                    writer.Put(p.CurrentScore);
+                    writer.Put(p.Name);
+                }
                 player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
                 Console.WriteLine($"[Sender] /GameStart/ Send startTime to player id:{player.ClientId}");
             }
@@ -81,7 +89,7 @@ namespace Shared.Network
         public static void SendInputPacket(Player player, Player fromPlayer, int inputData)
         {
             var packetMaking = new BitWriter();
-            packetMaking.WriteBits((int)PacketType.PlayerInput, 3);
+            packetMaking.WriteBits((int)PacketType.PlayerInput, 4);
             packetMaking.WriteBits((int)fromPlayer.ClientId & 0b111, 3);
             packetMaking.WriteBits((int)inputData & 0b111, 3);
             byte[] packet = packetMaking.ToArray();
@@ -97,7 +105,7 @@ namespace Shared.Network
             foreach (var receiver in sortedPlayers)
             {
                 var packetMaking = new BitWriter();
-                packetMaking.WriteBits((int)PacketType.RankingsUpdate, 3);
+                packetMaking.WriteBits((int)PacketType.RankingsUpdate, 4);
                 byte[] packet = packetMaking.ToArray();
 
                 var writer = new NetDataWriter();
@@ -120,7 +128,7 @@ namespace Shared.Network
             foreach (var player in players)
             {
                 var packetMaking = new BitWriter();
-                packetMaking.WriteBits((int)PacketType.GameEnd, 3);
+                packetMaking.WriteBits((int)PacketType.GameEnd, 4);
                 byte[] packet = packetMaking.ToArray();
 
                 NetDataWriter writer = new NetDataWriter();

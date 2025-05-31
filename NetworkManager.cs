@@ -72,7 +72,7 @@ public class NetworkManager : INetEventListener
         Array.Copy(reader.RawData, start, data, 0, length);
 
         var bitReader = new BitReader(data);
-        PacketType flag = (PacketType)bitReader.ReadBits(3);
+        PacketType flag = (PacketType)bitReader.ReadBits(4);
 //        Console.WriteLine("Received: flag: " + flag + " / start = " + start + " / length = " + length);
         
         switch (flag)
