@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Shared.Protocol;
 using Shared.Bits;
 using System.Dynamic;
+using System.Numerics;
+
 
 namespace Shared.Network
 {
@@ -17,7 +19,7 @@ namespace Shared.Network
                 foreach (var otherPlayer in players)
                 {
                     var packetMaking = new BitWriter();
-                    packetMaking.WriteBits((int)PacketType.MatchFound, 3);
+                    packetMaking.WriteBits((int)PacketType.MatchFound, 4);
                     packetMaking.WriteBits((int)players.Count, 3);
                     byte[] packet = packetMaking.ToArray();
 
@@ -34,7 +36,7 @@ namespace Shared.Network
         public static void SendWaitingPlayers(List<Player> waitingPlayers)
         {
             var packetMaking = new BitWriter();
-            packetMaking.WriteBits((int)PacketType.WaitingMember, 3);
+            packetMaking.WriteBits((int)PacketType.WaitingMember, 4);
             packetMaking.WriteBits((int)waitingPlayers.Count, 3);
             byte[] packet = packetMaking.ToArray();
             NetDataWriter writer = new NetDataWriter();
@@ -51,7 +53,7 @@ namespace Shared.Network
         public static void SendPlayerInfo(Player player)
         {
             var packetMaking = new BitWriter();
-            packetMaking.WriteBits((int)PacketType.MyInfo, 3);
+            packetMaking.WriteBits((int)PacketType.MyInfo, 4);
             packetMaking.WriteBits((int)player.ClientId & 0b111, 3);
             byte[] packet = packetMaking.ToArray();
 
@@ -67,7 +69,7 @@ namespace Shared.Network
             foreach (var player in players)
             {
                 var packetMaking = new BitWriter();
-                packetMaking.WriteBits((int)PacketType.GameStart, 3);
+                packetMaking.WriteBits((int)PacketType.GameStart, 4);
                 byte[] packet = packetMaking.ToArray();
 
                 NetDataWriter writer = new NetDataWriter();
@@ -81,7 +83,7 @@ namespace Shared.Network
         public static void SendInputPacket(Player player, Player fromPlayer, int inputData)
         {
             var packetMaking = new BitWriter();
-            packetMaking.WriteBits((int)PacketType.PlayerInput, 3);
+            packetMaking.WriteBits((int)PacketType.PlayerInput, 4);
             packetMaking.WriteBits((int)fromPlayer.ClientId & 0b111, 3);
             packetMaking.WriteBits((int)inputData & 0b111, 3);
             byte[] packet = packetMaking.ToArray();
@@ -91,13 +93,35 @@ namespace Shared.Network
             player.Peer.Send(writer, DeliveryMethod.Unreliable);
             Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
         }
+        public static void SendTransformPacket(Player player, Player fromPlayer, Vector3 pos, Quaternion rot)
+        {
+            var packetMaking = new BitWriter();
+            packetMaking.WriteBits((int)PacketType.TransformUpdate, 4);
+            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b111, 3);
+            byte[] packet = packetMaking.ToArray();
+
+            NetDataWriter writer = new NetDataWriter();
+            writer.Put(packet);
+
+            writer.Put(pos.X);
+            writer.Put(pos.Y);
+            writer.Put(pos.Z);
+
+            writer.Put(rot.X);
+            writer.Put(rot.Y);
+            writer.Put(rot.Z);
+            writer.Put(rot.W);
+
+            player.Peer.Send(writer, DeliveryMethod.Unreliable);
+            Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
+        }
 
         public static void SendRankings(List<Player> sortedPlayers)
         {
             foreach (var receiver in sortedPlayers)
             {
                 var packetMaking = new BitWriter();
-                packetMaking.WriteBits((int)PacketType.RankingsUpdate, 3);
+                packetMaking.WriteBits((int)PacketType.RankingsUpdate, 4);
                 byte[] packet = packetMaking.ToArray();
 
                 var writer = new NetDataWriter();
@@ -120,7 +144,7 @@ namespace Shared.Network
             foreach (var player in players)
             {
                 var packetMaking = new BitWriter();
-                packetMaking.WriteBits((int)PacketType.GameEnd, 3);
+                packetMaking.WriteBits((int)PacketType.GameEnd, 4);
                 byte[] packet = packetMaking.ToArray();
 
                 NetDataWriter writer = new NetDataWriter();

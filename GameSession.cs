@@ -6,7 +6,8 @@ using Shared.Network;     // MessageSender
 using Shared.Protocol;
 using System.Diagnostics;
 using System.Net.Sockets;
-using System.Xml.Serialization;    // PacketType
+using System.Xml.Serialization;
+using System.Numerics;    // PacketType
 
 public class GameSession
 {
@@ -15,6 +16,7 @@ public class GameSession
     public event Action<List<Player>>? OnGameEnded;
     public event Action<List<Player>, long>? OnGameStart;
     public event Action<Player, int, GameSession>? OnPlayerInputReceived;
+    public event Action<Player, Vector3, Quaternion, GameSession>? OnPlayerTransformReceived;
     private long startTime = 0;
     private long gamePlayTime = 0;
     private List<Player> players;
@@ -64,6 +66,11 @@ public class GameSession
     {
         // 서버는 물리 연산 없이 입력만 중계할 경우
         OnPlayerInputReceived?.Invoke(fromPlayer, inputData, this);
+    }
+    public void ReceiveTransform(Player fromPlayer, Vector3 pos, Quaternion rot)
+    {
+        // 서버는 물리 연산 없이 입력만 중계할 경우
+        OnPlayerTransformReceived?.Invoke(fromPlayer, pos, rot, this);
     }
     public bool HasPlayer(Player player)
     {

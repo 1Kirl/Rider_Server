@@ -9,6 +9,7 @@ using Shared.Protocol;
 using Shared.Bits;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using System.Numerics;
 
 public class NetworkManager : INetEventListener
 {
@@ -59,7 +60,7 @@ public class NetworkManager : INetEventListener
         Array.Copy(reader.RawData, start, data, 0, length);
 
         var bitReader = new BitReader(data);
-        PacketType flag = (PacketType)bitReader.ReadBits(3);
+        PacketType flag = (PacketType)bitReader.ReadBits(4);
 
         switch (flag) {
             case PacketType.LetsStart:
@@ -109,6 +110,28 @@ public class NetworkManager : INetEventListener
                 }
                 break;
 
+            case PacketType.TransformUpdate:
+                Console.WriteLine("[NM] Received: PositionUpdate");
+                reader.GetByte(); // dump padding
+                var position_sender = connectedPlayers[peer];
+                Vector3 pos = new Vector3
+                (
+                    reader.GetFloat(), // x
+                    reader.GetFloat(), // y
+                    reader.GetFloat()  // z
+                );
+
+                Quaternion rot = new Quaternion(
+                    reader.GetFloat(),
+                    reader.GetFloat(),
+                    reader.GetFloat(),
+                    reader.GetFloat()
+                );
+                if (playerToSession.TryGetValue(position_sender, out var position_session))
+                {
+                    position_session.ReceiveTransform(position_sender, pos, rot);
+                }
+                break;
             default:
                 break;
         }
@@ -128,6 +151,7 @@ public class NetworkManager : INetEventListener
         }
 
         session.OnPlayerInputReceived += HandlePlayerInput;
+        session.OnPlayerTransformReceived += HandlePlayerTransform;
         session.OnMatchFound += HandleMatchFound;
         session.OnGameStart += HandleGameStart;
         session.OnGameEnded += HandleGameEnded;
@@ -146,8 +170,21 @@ public class NetworkManager : INetEventListener
     }
 
     private void HandlePlayerInput(Player fromPlayer, int inputData, GameSession session) {
-        foreach (var player in session.GetPlayers()) {
-            MessageSender.SendInputPacket(player, fromPlayer, inputData);
+        foreach (var player in session.GetPlayers())
+        {
+            if (player != fromPlayer)
+            {
+                MessageSender.SendInputPacket(player, fromPlayer, inputData);
+            }
+        }
+    }
+    private void HandlePlayerTransform(Player fromPlayer, Vector3 pos, Quaternion rot, GameSession session) {
+        foreach (var player in session.GetPlayers())
+        {
+            if (player != fromPlayer)
+            {
+                MessageSender.SendTransformPacket(player, fromPlayer, pos, rot);
+            }
         }
     }
 
