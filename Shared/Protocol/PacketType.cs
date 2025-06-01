@@ -17,6 +17,7 @@ namespace Shared.Protocol
         ServerResultSummary = 11,
         ReachedFinishLine = 12,
         CountdownStart = 13,
-        TransformUpdate = 14    
+        TransformUpdate = 14,
+        Effect = 15
     }
 }

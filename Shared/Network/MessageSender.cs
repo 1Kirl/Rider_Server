@@ -101,6 +101,19 @@ namespace Shared.Network
             player.Peer.Send(writer, DeliveryMethod.Unreliable);
             //Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
         }
+        public static void SendEffectPacket(Player player, Player fromPlayer, int effectData)
+        {
+            var packetMaking = new BitWriter();
+            packetMaking.WriteBits((int)PacketType.Effect, 4);
+            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b111, 3);
+            packetMaking.WriteBits((int)effectData & 0b111, 3);
+            byte[] packet = packetMaking.ToArray();
+
+            NetDataWriter writer = new NetDataWriter();
+            writer.Put(packet);
+            player.Peer.Send(writer, DeliveryMethod.Unreliable);
+            //Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
+        }
         public static void SendTransformPacket(Player player, Player fromPlayer, Vector3 pos, Quaternion rot)
         {
             var packetMaking = new BitWriter();

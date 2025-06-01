@@ -139,6 +139,15 @@ public class NetworkManager : INetEventListener
                     position_session.ReceiveTransform(position_sender, pos, rot);
                 }
                 break;
+            case PacketType.Effect:
+                Console.WriteLine("[NM] Received: Effect");
+                var effect_sender = connectedPlayers[peer];
+                if (playerToSession.TryGetValue(effect_sender, out var effect_session)) {
+                    int effectData = bitReader.ReadBits(3);
+                    Console.WriteLine($"[NM] Effect: {effectData}");
+                    effect_session.ReceiveEffect(effect_sender, effectData);
+                }
+                break;
             default:
                 break;
         }
@@ -158,6 +167,7 @@ public class NetworkManager : INetEventListener
         }
 
         session.OnPlayerInputReceived += HandlePlayerInput;
+        session.OnPlayerEffectReceived += HandlePlayerEffect;
         session.OnPlayerTransformReceived += HandlePlayerTransform;
         session.OnMatchFound += HandleMatchFound;
         session.OnGameStart += HandleGameStart;
@@ -182,6 +192,15 @@ public class NetworkManager : INetEventListener
             if (player != fromPlayer)
             {
                 MessageSender.SendInputPacket(player, fromPlayer, inputData);
+            }
+        }
+    }
+    private void HandlePlayerEffect(Player fromPlayer, int effectData, GameSession session) {
+        foreach (var player in session.GetPlayers())
+        {
+            if (player != fromPlayer)
+            {
+                MessageSender.SendEffectPacket(player, fromPlayer, effectData);
             }
         }
     }
