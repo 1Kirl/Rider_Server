@@ -193,7 +193,7 @@ namespace Shared.Network
 
             byte[] packet = packetMaking.ToArray();
             writer.Put(packet);
-            writer.Put(serverStartTimestamp); // unix ms time 기준
+            writer.Put(serverStartTimestamp); 
 
             foreach (var player in players)
                 player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);

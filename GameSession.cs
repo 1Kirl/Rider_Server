@@ -113,11 +113,12 @@ public class GameSession
 
         // 2번: CountdownStart 패킷 전송 (서버 시간 기준)
         long countdownStartTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        MessageSender.SendCountdownStart(players, countdownStartTime);
+        long endTimeWithLeeway = countdownStartTime + 200;
+        MessageSender.SendCountdownStart(players, endTimeWithLeeway);
 
         Task.Run(async () =>
         {
-            await Task.Delay(10000); // 10초 대기
+            await Task.Delay(10200); // 10초 대기
             EndGame();
         });
     }
