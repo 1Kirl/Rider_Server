@@ -99,7 +99,7 @@ namespace Shared.Network
             NetDataWriter writer = new NetDataWriter();
             writer.Put(packet);
             player.Peer.Send(writer, DeliveryMethod.Unreliable);
-            Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
+            //Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
         }
         public static void SendTransformPacket(Player player, Player fromPlayer, Vector3 pos, Quaternion rot)
         {
@@ -121,7 +121,7 @@ namespace Shared.Network
             writer.Put(rot.W);
 
             player.Peer.Send(writer, DeliveryMethod.Unreliable);
-            Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
+            //Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
         }
 
         public static void SendRankings(List<Player> sortedPlayers)

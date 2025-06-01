@@ -70,7 +70,7 @@ public class NetworkManager : INetEventListener
                 break;
 
             case PacketType.PlayerInput:
-                Console.WriteLine("[NM] Received: PlayerInput");
+                //Console.WriteLine("[NM] Received: PlayerInput");
                 var sender = connectedPlayers[peer];
                 if (playerToSession.TryGetValue(sender, out var session)) {
                     int inputData = bitReader.ReadBits(3);
@@ -118,7 +118,7 @@ public class NetworkManager : INetEventListener
                 }
 
             case PacketType.TransformUpdate:
-                Console.WriteLine("[NM] Received: PositionUpdate");
+                //Console.WriteLine("[NM] Received: PositionUpdate");
                 reader.GetByte(); // dump padding
                 var position_sender = connectedPlayers[peer];
                 Vector3 pos = new Vector3
