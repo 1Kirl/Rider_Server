@@ -16,6 +16,7 @@ public class GameSession
     public event Action<List<Player>>? OnGameEnded;
     public event Action<List<Player>, long>? OnGameStart;
     public event Action<Player, int, GameSession>? OnPlayerInputReceived;
+    public event Action<Player, int, GameSession>? OnPlayerEffectReceived;
     public event Action<Player, Vector3, Quaternion, GameSession>? OnPlayerTransformReceived;
     private long startTime = 0;
     private long gamePlayTime = 0;
@@ -88,6 +89,11 @@ public class GameSession
     {
         // 서버는 물리 연산 없이 입력만 중계할 경우
         OnPlayerInputReceived?.Invoke(fromPlayer, inputData, this);
+    }
+    public void ReceiveEffect(Player fromPlayer, int effectData)
+    {
+        // 서버는 물리 연산 없이 중계할 경우
+        OnPlayerEffectReceived?.Invoke(fromPlayer, effectData, this);
     }
     public void ReceiveTransform(Player fromPlayer, Vector3 pos, Quaternion rot)
     {
