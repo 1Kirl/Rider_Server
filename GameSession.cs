@@ -14,6 +14,7 @@ public class GameSession
     public int SessionId { get; }
     public event Action<List<Player>>? OnMatchFound;
     public event Action<List<Player>>? OnGameEnded;
+    public event Action<GameSession>? OnSessionDestroy;
     public event Action<List<Player>, long>? OnGameStart;
     public event Action<Player, int, GameSession>? OnPlayerInputReceived;
     public event Action<Player, int, GameSession>? OnPlayerEffectReceived;
@@ -58,9 +59,9 @@ public class GameSession
 
         await Task.Delay((int)gamePlayTime); // 게임 플레이 시간 대기
         StartEarlyEndTimerIfNotRunning();
-        EndGame(); // 게임 종료 처리
     }
-    public void EndGame() {
+    public void EndGame()
+    {
         Console.WriteLine($"[GameSession {SessionId}] Game ended.");
 
         // 1. 도달 여부 분리
@@ -71,7 +72,8 @@ public class GameSession
         finishers.Sort((a, b) => a.FinishTimestamp.CompareTo(b.FinishTimestamp));
 
         // 3. arrivalRank 부여
-        for (int i = 0; i < finishers.Count; i++) {
+        for (int i = 0; i < finishers.Count; i++)
+        {
             finishers[i].ArrivalRank = i + 1; // 1등부터
         }
 
@@ -83,6 +85,7 @@ public class GameSession
 
         // 6. UI 종료 트리거 등
         OnGameEnded?.Invoke(players);
+        OnSessionDestroy?.Invoke(this);
     }
 
     public void ReceiveInput(Player fromPlayer, int inputData)
