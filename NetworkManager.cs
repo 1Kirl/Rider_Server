@@ -96,26 +96,24 @@ public class NetworkManager : INetEventListener
                 matchmaker.RemovePlayer(connectedPlayers[peer]);
                 break;
 
-            case PacketType.ReachedFinishLine: {
-                    Console.WriteLine("[NM] Received: FinishFlag");
-                    reader.GetByte(); // dump padding
-                    var player = connectedPlayers[peer];
-                    ushort finishscore = reader.GetUShort();
-                    player.CurrentScore = finishscore;
-                    player.HasReachedFinish = true;
+            case PacketType.ReachedFinishLine: 
+                Console.WriteLine("[NM] Received: FinishFlag");
+                reader.GetByte(); // dump padding
+                var player = connectedPlayers[peer];
+                ushort finishscore = reader.GetUShort();
+                player.CurrentScore = finishscore;
+                player.HasReachedFinish = true;
+                if (playerToSession.TryGetValue(player, out var finishsession)) {
+                    long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                    long relativeFinishTime = now - finishsession.GetStartTime();
+                    player.FinishTimestamp = relativeFinishTime;
 
-                    if (playerToSession.TryGetValue(player, out var finishsession)) {
-                        long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                        long relativeFinishTime = now - finishsession.GetStartTime();
-                        player.FinishTimestamp = relativeFinishTime;
+                    Console.WriteLine($"[Server] Player {player.ClientId} reached finish line at +{relativeFinishTime}ms");
 
-                        Console.WriteLine($"[Server] Player {player.ClientId} reached finish line at +{relativeFinishTime}ms");
-
-                        // 1��: ���� ������ ���� Ÿ�̸� ����
-                        finishsession.StartEarlyEndTimerIfNotRunning();
-                    }
-                    break;
+                    // 1��: ���� ������ ���� Ÿ�̸� ����
+                    finishsession.StartEarlyEndTimerIfNotRunning();
                 }
+                break;
 
             case PacketType.TransformUpdate:
                 //Console.WriteLine("[NM] Received: PositionUpdate");

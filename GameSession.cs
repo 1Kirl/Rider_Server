@@ -57,7 +57,7 @@ public class GameSession
         Console.WriteLine($"[GameSession {SessionId}] Game started!");
 
         await Task.Delay((int)gamePlayTime); // 게임 플레이 시간 대기
-
+        StartEarlyEndTimerIfNotRunning();
         EndGame(); // 게임 종료 처리
     }
     public void EndGame() {
