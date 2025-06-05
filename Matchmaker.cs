@@ -36,6 +36,7 @@ public class Matchmaker
             sessions[sessionId] = session;
             NetworkManager.Instance.RegisterSession(session);
             session.MatchFound();
+            session.OnSessionDestroy += RemoveSession;
             //gamestart call
             Console.WriteLine($"[Matchmaker] GameSession {sessionId} created. / Total member: {matchPlayers.Count}");
         }
@@ -43,6 +44,14 @@ public class Matchmaker
     public GameSession? GetSessionByPlayer(Player player)
     {
         return sessions.Values.FirstOrDefault(session => session.HasPlayer(player));
+    }
+    public void RemoveSession(GameSession session)
+    {
+        session.OnSessionDestroy -= RemoveSession;
+        if(sessions.Remove(session.SessionId, out var session_removed))
+        {
+            Console.WriteLine($"[MatchMaker] Session {session_removed.SessionId}");
+        }
     }
     public void RemovePlayer(Player player)
     {

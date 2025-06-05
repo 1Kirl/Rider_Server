@@ -62,7 +62,8 @@ public class NetworkManager : INetEventListener
         var bitReader = new BitReader(data);
         PacketType flag = (PacketType)bitReader.ReadBits(4);
 
-        switch (flag) {
+        switch (flag)
+        {
             case PacketType.LetsStart:
                 Console.WriteLine("[NM] Received: LetsStart");
                 reader.GetByte(); // dump padding
@@ -94,6 +95,8 @@ public class NetworkManager : INetEventListener
             case PacketType.StopFinding:
                 Console.WriteLine("[NM] Received: StopFinding");
                 matchmaker.RemovePlayer(connectedPlayers[peer]);
+                
+                peer.Disconnect();
                 break;
 
             case PacketType.ReachedFinishLine: 
@@ -152,11 +155,17 @@ public class NetworkManager : INetEventListener
         reader.Recycle();
     }
 
-    public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo) {
-        if (connectedPlayers.Remove(peer, out var player)) {
-            Console.WriteLine($"[Server] Player disconnected: {player.ClientId}");
+    public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
+    {
+        Console.WriteLine($"[NM]: player disconnected / id: {connectedPlayers[peer].ClientId}");    
+        if (playerToSession.Remove(connectedPlayers[peer], out var session))
+        {
+            Console.WriteLine($"[NM] remove player and session binding data: {connectedPlayers[peer]} + {session.SessionId}");
         }
-        Console.WriteLine("Disconnected");
+        if (connectedPlayers.Remove(peer, out var player))
+        {
+            Console.WriteLine($"[Server] player disconnected id: {player.ClientId}");
+        }
     }
 
     public void RegisterSession(GameSession session) {
@@ -170,6 +179,7 @@ public class NetworkManager : INetEventListener
         session.OnMatchFound += HandleMatchFound;
         session.OnGameStart += HandleGameStart;
         session.OnGameEnded += HandleGameEnded;
+        session.OnSessionDestroy += HandleSessionDestroy;
     }
 
     public void SendMyInfo(Player player) {
@@ -218,7 +228,17 @@ public class NetworkManager : INetEventListener
 
     private void HandleGameEnded(List<Player> players) {
         MessageSender.SendGameEnd(players);
-
+    }
+    private void HandleSessionDestroy(GameSession session)
+    {
+        //un-bind events
+        session.OnPlayerInputReceived -= HandlePlayerInput;
+        session.OnPlayerEffectReceived -= HandlePlayerEffect;
+        session.OnPlayerTransformReceived -= HandlePlayerTransform;
+        session.OnMatchFound -= HandleMatchFound;
+        session.OnGameStart -= HandleGameStart;
+        session.OnGameEnded -= HandleGameEnded;
+        session.OnSessionDestroy -= HandleSessionDestroy;
     }
 
     private void UpdateRankings(Player fromPlayer) {

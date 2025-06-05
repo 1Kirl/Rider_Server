@@ -20,7 +20,7 @@ namespace Shared.Network
                 {
                     var packetMaking = new BitWriter();
                     packetMaking.WriteBits((int)PacketType.MatchFound, 4);
-                    packetMaking.WriteBits((int)players.Count, 3);
+                    packetMaking.WriteBits((int)players.Count, 4);
                     byte[] packet = packetMaking.ToArray();
 
                     NetDataWriter writer = new NetDataWriter();
@@ -56,7 +56,7 @@ namespace Shared.Network
         {
             var packetMaking = new BitWriter();
             packetMaking.WriteBits((int)PacketType.MyInfo, 4);
-            packetMaking.WriteBits((int)player.ClientId & 0b111, 3);
+            packetMaking.WriteBits((int)player.ClientId & 0b1111, 4);
             byte[] packet = packetMaking.ToArray();
 
             NetDataWriter writer = new NetDataWriter();
@@ -94,7 +94,7 @@ namespace Shared.Network
         {
             var packetMaking = new BitWriter();
             packetMaking.WriteBits((int)PacketType.PlayerInput, 4);
-            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b111, 3);
+            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b1111, 4);
             packetMaking.WriteBits((int)inputData & 0b111, 3);
             byte[] packet = packetMaking.ToArray();
 
@@ -107,7 +107,7 @@ namespace Shared.Network
         {
             var packetMaking = new BitWriter();
             packetMaking.WriteBits((int)PacketType.Effect, 4);
-            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b111, 3);
+            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b1111, 4);
             packetMaking.WriteBits((int)effectData & 0b111, 3);
             byte[] packet = packetMaking.ToArray();
 
@@ -120,7 +120,7 @@ namespace Shared.Network
         {
             var packetMaking = new BitWriter();
             packetMaking.WriteBits((int)PacketType.TransformUpdate, 4);
-            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b111, 3);
+            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b1111, 4);
             byte[] packet = packetMaking.ToArray();
 
             NetDataWriter writer = new NetDataWriter();
