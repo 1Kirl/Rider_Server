@@ -62,7 +62,8 @@ public class NetworkManager : INetEventListener
         var bitReader = new BitReader(data);
         PacketType flag = (PacketType)bitReader.ReadBits(4);
 
-        switch (flag) {
+        switch (flag)
+        {
             case PacketType.LetsStart:
                 Console.WriteLine("[NM] Received: LetsStart");
                 reader.GetByte(); // dump padding
@@ -94,6 +95,8 @@ public class NetworkManager : INetEventListener
             case PacketType.StopFinding:
                 Console.WriteLine("[NM] Received: StopFinding");
                 matchmaker.RemovePlayer(connectedPlayers[peer]);
+                
+                peer.Disconnect();
                 break;
 
             case PacketType.ReachedFinishLine: 
