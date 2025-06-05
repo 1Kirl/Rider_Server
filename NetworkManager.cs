@@ -66,7 +66,7 @@ public class NetworkManager : INetEventListener
             case PacketType.LetsStart:
                 Console.WriteLine("[NM] Received: LetsStart");
                 reader.GetByte(); // dump padding
-                matchmaker.AddPlayer(connectedPlayers[peer], reader.GetUShort(), reader.GetString());
+                matchmaker.AddPlayer(connectedPlayers[peer], reader.GetUShort(), reader.GetUShort(),reader.GetUShort(), reader.GetString());
                 break;
 
             case PacketType.PlayerInput:

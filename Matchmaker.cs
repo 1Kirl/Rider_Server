@@ -13,11 +13,13 @@ public class Matchmaker
     private int nextSessionId = 0;
     private const int MatchSize = 2;
     private ushort nextClientId = 0;
-    public void AddPlayer(Player player, ushort carKind, string nickname)
+    public void AddPlayer(Player player, ushort carKind, ushort dieEffect, ushort trailId, string nickname)
     {
         ushort assingedId = nextClientId++;
         player.ClientId = assingedId;
         player.CarKind = carKind;
+        player.DieEffect = dieEffect;
+        player.Trail = trailId;   
         player.Name = nickname;
         waitingPlayers.Add(player);
         NetworkManager.Instance.SendMyInfo(player);

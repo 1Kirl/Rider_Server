@@ -27,9 +27,11 @@ namespace Shared.Network
                     writer.Put(packet);
                     writer.Put(otherPlayer.ClientId);
                     writer.Put(otherPlayer.CarKind);
+                    writer.Put(otherPlayer.DieEffect);
+                    writer.Put(otherPlayer.Trail);
                     writer.Put(otherPlayer.Name);
                     player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
-                    Console.WriteLine($"[Sender] /matchFound/ Send memeberInfo of a room id:{otherPlayer.ClientId} / name: {otherPlayer.Name}");
+                    Console.WriteLine($"[Sender] /matchFound/ Send memeberInfo of a room id:{otherPlayer.ClientId} / carKind:{otherPlayer.CarKind}/ Dieeffect: {otherPlayer.DieEffect}/Trail: {otherPlayer.Trail}/name: {otherPlayer.Name}");
                 }
             }
         }
