@@ -12,7 +12,7 @@ using System.Numerics;    // PacketType
 public class GameSession
 {
     public int SessionId { get; }
-    public event Action<List<Player>>? OnMatchFound;
+    public event Action<List<Player>, MapType>? OnMatchFound;
     public event Action<List<Player>>? OnGameEnded;
     public event Action<GameSession>? OnSessionDestroy;
     public event Action<List<Player>, long>? OnGameStart;
@@ -24,6 +24,8 @@ public class GameSession
     private List<Player> players;
     private int readyPlayer = 0;
     private bool isEarlyEndTriggered = false;
+    private static Random random = new Random();
+
 
     public GameSession(int sessionId, List<Player> players)
     {
@@ -31,10 +33,17 @@ public class GameSession
         this.players = players;
     }
 
+    public static Shared.Protocol.MapType GetRandomMapType()
+    {
+        Array values = Enum.GetValues(typeof(Shared.Protocol.MapType));
+        int index = random.Next(values.Length);
+        //return (Shared.Protocol.MapType)values.GetValue(index);
+        return MapType.third;
+    }
     public void MatchFound()
     {
         Console.WriteLine($"[GameSession {SessionId}] Match Found.");
-        OnMatchFound?.Invoke(players);
+        OnMatchFound?.Invoke(players, GetRandomMapType());
     }
     public void StartGame(Player player)
     {
@@ -43,14 +52,14 @@ public class GameSession
         if (readyPlayer >= players.Count)
         {
             readyPlayer = 0;
-            startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 2000;
+            startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 500;
             OnGameStart?.Invoke(players, startTime);
             this.GameTimer();
         }
     }
     private async void GameTimer()
     {
-        gamePlayTime = 60000; // 60초
+        gamePlayTime = 10000; // 5분초
         var delay = startTime - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         if (delay > 0)
             await Task.Delay((int)delay); // 게임 시작까지 대기

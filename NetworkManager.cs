@@ -67,7 +67,11 @@ public class NetworkManager : INetEventListener
             case PacketType.LetsStart:
                 Console.WriteLine("[NM] Received: LetsStart");
                 reader.GetByte(); // dump padding
-                matchmaker.AddPlayer(connectedPlayers[peer], reader.GetUShort(), reader.GetUShort(),reader.GetUShort(), reader.GetString());
+                matchmaker.AddPlayer(connectedPlayers[peer],
+                reader.GetUShort(),
+                reader.GetUShort(),
+                reader.GetUShort(),
+                reader.GetString());
                 break;
 
             case PacketType.PlayerInput:
@@ -95,7 +99,7 @@ public class NetworkManager : INetEventListener
             case PacketType.StopFinding:
                 Console.WriteLine("[NM] Received: StopFinding");
                 matchmaker.RemovePlayer(connectedPlayers[peer]);
-                
+
                 peer.Disconnect();
                 break;
 
@@ -106,7 +110,8 @@ public class NetworkManager : INetEventListener
                 ushort finishscore = reader.GetUShort();
                 player.CurrentScore = finishscore;
                 player.HasReachedFinish = true;
-                if (playerToSession.TryGetValue(player, out var finishsession)) {
+                if (playerToSession.TryGetValue(player, out var finishsession))
+                {
                     long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                     long relativeFinishTime = now - finishsession.GetStartTime();
                     player.FinishTimestamp = relativeFinishTime;
@@ -222,8 +227,8 @@ public class NetworkManager : INetEventListener
         }
     }
 
-    private void HandleMatchFound(List<Player> players) {
-        MessageSender.SendMatchFound(players);
+    private void HandleMatchFound(List<Player> players, MapType mapType) {
+        MessageSender.SendMatchFound(players, mapType);
     }
 
     private void HandleGameEnded(List<Player> players) {

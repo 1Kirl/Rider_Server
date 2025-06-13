@@ -12,7 +12,7 @@ namespace Shared.Network
     public static class MessageSender
     {
         // server says "here are all the information of players! including you"
-        public static void SendMatchFound(List<Player> players)
+        public static void SendMatchFound(List<Player> players, MapType mapType)
         {
             foreach (var player in players)
             {
@@ -30,6 +30,7 @@ namespace Shared.Network
                     writer.Put(otherPlayer.DieEffect);
                     writer.Put(otherPlayer.Trail);
                     writer.Put(otherPlayer.Name);
+                    writer.Put((byte)mapType);
                     player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
                     Console.WriteLine($"[Sender] /matchFound/ Send memeberInfo of a room id:{otherPlayer.ClientId} / carKind:{otherPlayer.CarKind}/ Dieeffect: {otherPlayer.DieEffect}/Trail: {otherPlayer.Trail}/name: {otherPlayer.Name}");
                 }
