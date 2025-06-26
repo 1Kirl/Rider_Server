@@ -59,7 +59,7 @@ public class GameSession
     }
     private async void GameTimer()
     {
-        gamePlayTime = 10000; // 5분초
+        gamePlayTime = 180000; // 5분초
         var delay = startTime - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         if (delay > 0)
             await Task.Delay((int)delay); // 게임 시작까지 대기
