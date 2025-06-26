@@ -12,16 +12,20 @@ using System.Numerics;    // PacketType
 public class GameSession
 {
     public int SessionId { get; }
-    public event Action<List<Player>>? OnMatchFound;
+    public event Action<List<Player>, MapType>? OnMatchFound;
     public event Action<List<Player>>? OnGameEnded;
+    public event Action<GameSession>? OnSessionDestroy;
     public event Action<List<Player>, long>? OnGameStart;
     public event Action<Player, int, GameSession>? OnPlayerInputReceived;
+    public event Action<Player, int, GameSession>? OnPlayerEffectReceived;
     public event Action<Player, Vector3, Quaternion, GameSession>? OnPlayerTransformReceived;
     private long startTime = 0;
     private long gamePlayTime = 0;
     private List<Player> players;
     private int readyPlayer = 0;
     private bool isEarlyEndTriggered = false;
+    private static Random random = new Random();
+
 
     public GameSession(int sessionId, List<Player> players)
     {
@@ -29,10 +33,17 @@ public class GameSession
         this.players = players;
     }
 
+    public static Shared.Protocol.MapType GetRandomMapType()
+    {
+        Array values = Enum.GetValues(typeof(Shared.Protocol.MapType));
+        int index = random.Next(values.Length);
+        //return (Shared.Protocol.MapType)values.GetValue(index);
+        return MapType.third;
+    }
     public void MatchFound()
     {
         Console.WriteLine($"[GameSession {SessionId}] Match Found.");
-        OnMatchFound?.Invoke(players);
+        OnMatchFound?.Invoke(players, GetRandomMapType());
     }
     public void StartGame(Player player)
     {
@@ -41,14 +52,14 @@ public class GameSession
         if (readyPlayer >= players.Count)
         {
             readyPlayer = 0;
-            startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 2000;
+            startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 500;
             OnGameStart?.Invoke(players, startTime);
             this.GameTimer();
         }
     }
     private async void GameTimer()
     {
-        gamePlayTime = 60000; // 60초
+        gamePlayTime = 180000; // 5분초
         var delay = startTime - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         if (delay > 0)
             await Task.Delay((int)delay); // 게임 시작까지 대기
@@ -56,10 +67,10 @@ public class GameSession
         Console.WriteLine($"[GameSession {SessionId}] Game started!");
 
         await Task.Delay((int)gamePlayTime); // 게임 플레이 시간 대기
-
-        EndGame(); // 게임 종료 처리
+        StartEarlyEndTimerIfNotRunning();
     }
-    public void EndGame() {
+    public void EndGame()
+    {
         Console.WriteLine($"[GameSession {SessionId}] Game ended.");
 
         // 1. 도달 여부 분리
@@ -70,7 +81,8 @@ public class GameSession
         finishers.Sort((a, b) => a.FinishTimestamp.CompareTo(b.FinishTimestamp));
 
         // 3. arrivalRank 부여
-        for (int i = 0; i < finishers.Count; i++) {
+        for (int i = 0; i < finishers.Count; i++)
+        {
             finishers[i].ArrivalRank = i + 1; // 1등부터
         }
 
@@ -82,12 +94,18 @@ public class GameSession
 
         // 6. UI 종료 트리거 등
         OnGameEnded?.Invoke(players);
+        OnSessionDestroy?.Invoke(this);
     }
 
     public void ReceiveInput(Player fromPlayer, int inputData)
     {
         // 서버는 물리 연산 없이 입력만 중계할 경우
         OnPlayerInputReceived?.Invoke(fromPlayer, inputData, this);
+    }
+    public void ReceiveEffect(Player fromPlayer, int effectData)
+    {
+        // 서버는 물리 연산 없이 중계할 경우
+        OnPlayerEffectReceived?.Invoke(fromPlayer, effectData, this);
     }
     public void ReceiveTransform(Player fromPlayer, Vector3 pos, Quaternion rot)
     {
@@ -113,11 +131,12 @@ public class GameSession
 
         // 2번: CountdownStart 패킷 전송 (서버 시간 기준)
         long countdownStartTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        MessageSender.SendCountdownStart(players, countdownStartTime);
+        long endTimeWithLeeway = countdownStartTime + 200;
+        MessageSender.SendCountdownStart(players, endTimeWithLeeway);
 
         Task.Run(async () =>
         {
-            await Task.Delay(10000); // 10초 대기
+            await Task.Delay(10200); // 10초 대기
             EndGame();
         });
     }

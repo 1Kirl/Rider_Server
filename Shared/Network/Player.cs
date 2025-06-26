@@ -14,6 +14,8 @@ namespace Shared.Network
         /// peer.Id 기반의 int형 id
         /// </summary>
         public ushort ClientId { get; set; }
+        public ushort DieEffect { get; set; }
+        public ushort Trail { get; set;}   
         public ushort CarKind { get; set; }
         /// <summary>
         /// 예: 닉네임, 식별용 이름 등
@@ -25,10 +27,6 @@ namespace Shared.Network
             Peer = peer;
         }
 
-        public override string ToString()
-        {
-            return $"[Player] ClientId={ClientId}, Name={Name}";
-        }
 
         public ushort CurrentScore { get; set; }
 

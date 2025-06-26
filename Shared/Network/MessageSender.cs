@@ -12,7 +12,7 @@ namespace Shared.Network
     public static class MessageSender
     {
         // server says "here are all the information of players! including you"
-        public static void SendMatchFound(List<Player> players)
+        public static void SendMatchFound(List<Player> players, MapType mapType)
         {
             foreach (var player in players)
             {
@@ -20,16 +20,19 @@ namespace Shared.Network
                 {
                     var packetMaking = new BitWriter();
                     packetMaking.WriteBits((int)PacketType.MatchFound, 4);
-                    packetMaking.WriteBits((int)players.Count, 3);
+                    packetMaking.WriteBits((int)players.Count, 4);
                     byte[] packet = packetMaking.ToArray();
 
                     NetDataWriter writer = new NetDataWriter();
                     writer.Put(packet);
                     writer.Put(otherPlayer.ClientId);
                     writer.Put(otherPlayer.CarKind);
+                    writer.Put(otherPlayer.DieEffect);
+                    writer.Put(otherPlayer.Trail);
                     writer.Put(otherPlayer.Name);
+                    writer.Put((byte)mapType);
                     player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
-                    Console.WriteLine($"[Sender] /matchFound/ Send memeberInfo of a room id:{otherPlayer.ClientId} / name: {otherPlayer.Name}");
+                    Console.WriteLine($"[Sender] /matchFound/ Send memeberInfo of a room id:{otherPlayer.ClientId} / carKind:{otherPlayer.CarKind}/ Dieeffect: {otherPlayer.DieEffect}/Trail: {otherPlayer.Trail}/name: {otherPlayer.Name}");
                 }
             }
         }
@@ -54,7 +57,7 @@ namespace Shared.Network
         {
             var packetMaking = new BitWriter();
             packetMaking.WriteBits((int)PacketType.MyInfo, 4);
-            packetMaking.WriteBits((int)player.ClientId & 0b111, 3);
+            packetMaking.WriteBits((int)player.ClientId & 0b1111, 4);
             byte[] packet = packetMaking.ToArray();
 
             NetDataWriter writer = new NetDataWriter();
@@ -92,20 +95,33 @@ namespace Shared.Network
         {
             var packetMaking = new BitWriter();
             packetMaking.WriteBits((int)PacketType.PlayerInput, 4);
-            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b111, 3);
+            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b1111, 4);
             packetMaking.WriteBits((int)inputData & 0b111, 3);
             byte[] packet = packetMaking.ToArray();
 
             NetDataWriter writer = new NetDataWriter();
             writer.Put(packet);
             player.Peer.Send(writer, DeliveryMethod.Unreliable);
-            Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
+            //Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
+        }
+        public static void SendEffectPacket(Player player, Player fromPlayer, int effectData)
+        {
+            var packetMaking = new BitWriter();
+            packetMaking.WriteBits((int)PacketType.Effect, 4);
+            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b1111, 4);
+            packetMaking.WriteBits((int)effectData & 0b111, 3);
+            byte[] packet = packetMaking.ToArray();
+
+            NetDataWriter writer = new NetDataWriter();
+            writer.Put(packet);
+            player.Peer.Send(writer, DeliveryMethod.Unreliable);
+            //Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
         }
         public static void SendTransformPacket(Player player, Player fromPlayer, Vector3 pos, Quaternion rot)
         {
             var packetMaking = new BitWriter();
             packetMaking.WriteBits((int)PacketType.TransformUpdate, 4);
-            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b111, 3);
+            packetMaking.WriteBits((int)fromPlayer.ClientId & 0b1111, 4);
             byte[] packet = packetMaking.ToArray();
 
             NetDataWriter writer = new NetDataWriter();
@@ -121,7 +137,7 @@ namespace Shared.Network
             writer.Put(rot.W);
 
             player.Peer.Send(writer, DeliveryMethod.Unreliable);
-            Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
+            //Console.WriteLine($"[Sender] /PlayerInput/ from id:{fromPlayer.ClientId}/ to id: {player.ClientId}");
         }
 
         public static void SendRankings(List<Player> sortedPlayers)
@@ -193,10 +209,11 @@ namespace Shared.Network
 
             byte[] packet = packetMaking.ToArray();
             writer.Put(packet);
-            writer.Put(serverStartTimestamp); // unix ms time 기준
+            writer.Put(serverStartTimestamp); 
 
             foreach (var player in players)
                 player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
+            Console.WriteLine("Start counting");
         }
 
         /*
