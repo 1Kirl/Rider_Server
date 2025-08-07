@@ -21,6 +21,7 @@ public class GameSession
     public event Action<Player, Vector3, Quaternion, GameSession>? OnPlayerTransformReceived;
     private long startTime = 0;
     private long gamePlayTime = 0;
+    private ushort round = 1;
     private List<Player> players;
     private int readyPlayer = 0;
     private bool isEarlyEndTriggered = false;
@@ -84,12 +85,23 @@ public class GameSession
         for (int i = 0; i < finishers.Count; i++)
         {
             finishers[i].ArrivalRank = i + 1; // 1등부터
+            float multiplier = (i + 1) switch {
+            1 => 2f,
+            2 => 1.5f,
+            3 => 1.25f,
+            _ => 1f
+        };
+            finishers[i].FinalScore = (ushort)(finishers[i].CurrentScore * multiplier);
+        }
+        for (int i = 0; i < nonFinishers.Count; i++)
+        {
+            nonFinishers[i].FinalScore = nonFinishers[i].CurrentScore;
         }
 
         // 4. 미도달자는 점수만으로 정렬
         var sorted = finishers.Concat(nonFinishers.OrderByDescending(p => p.CurrentScore)).ToList();
 
-        // 5. 결과 전송 (보너스 점수 계산은 클라이언트에서)
+        // 5. 결과 전송 (서버에서 보너스 점수도 추가 완료)
         MessageSender.SendFinalResultSummary(sorted);
 
         // 6. UI 종료 트리거 등
@@ -124,8 +136,13 @@ public class GameSession
     public long GetStartTime() {
         return startTime;
     }
+    public ushort GetRoundNum()
+    {
+        return round;
+    }
 
-    public void StartEarlyEndTimerIfNotRunning() {
+    public void StartEarlyEndTimerIfNotRunning()
+    {
         if (isEarlyEndTriggered) return;
         isEarlyEndTriggered = true;
 
