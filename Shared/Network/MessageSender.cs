@@ -188,12 +188,14 @@ namespace Shared.Network
                 writer.Put(packet);
                 writer.Put(playersInOrder.Count);
 
-                for (int i = 0; i < playersInOrder.Count; i++) {
+                for (int i = 0; i < playersInOrder.Count; i++)
+                {
                     var p = playersInOrder[i];
                     writer.Put(p.ClientId);
                     writer.Put(p.Name);
                     writer.Put(p.CurrentScore);
                     writer.Put((byte)(p.ArrivalRank > 0 ? p.ArrivalRank : 0));
+                    writer.Put(p.FinalScore);
                 }
 
                 player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
@@ -215,40 +217,5 @@ namespace Shared.Network
                 player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
             Console.WriteLine("Start counting");
         }
-
-        /*
-        public static void SendMatchFound(Player player)
-        {
-            NetDataWriter writer = new NetDataWriter();
-            writer.Put((byte)PacketType.MatchFound);
-            player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
-        }
-        public static void SendGameEnd(IEnumerable<Player> players)
-        {
-            NetDataWriter writer = new NetDataWriter();
-            writer.Put((byte)PacketType.GameEnd);
-
-            foreach (var player in players)
-                player.Peer.Send(writer, DeliveryMethod.ReliableOrdered);
-        }
-
-        public static void SendPositionSync(Player player, float x, float y, float rotation)
-        {
-            NetDataWriter writer = new NetDataWriter();
-            writer.Put((byte)PacketType.PositionSync);
-            writer.Put(x);
-            writer.Put(y);
-            writer.Put(rotation);
-            player.Peer.Send(writer, DeliveryMethod.Unreliable);
-        }
-
-        public static void SendPong(Player player)
-        {
-            NetDataWriter writer = new NetDataWriter();
-            writer.Put((byte)PacketType.Pong);
-            player.Peer.Send(writer, DeliveryMethod.Unreliable);
-        }
-        */
-        // 필요 시 다른 Send 메서드 계속 추가
     }
 }

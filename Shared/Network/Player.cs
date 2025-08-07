@@ -5,21 +5,13 @@ namespace Shared.Network
 {
     public class Player
     {
-        /// <summary>
-        /// 연결된 클라이언트를 나타내는 NetPeer 객체
-        /// </summary>
         public NetPeer Peer { get; }
 
-        /// <summary>
-        /// peer.Id 기반의 int형 id
-        /// </summary>
         public ushort ClientId { get; set; }
         public ushort DieEffect { get; set; }
         public ushort Trail { get; set;}   
         public ushort CarKind { get; set; }
-        /// <summary>
-        /// 예: 닉네임, 식별용 이름 등
-        /// </summary>
+
         public string Name { get; set; } = string.Empty;
 
         public Player(NetPeer peer)
@@ -29,10 +21,11 @@ namespace Shared.Network
 
 
         public ushort CurrentScore { get; set; }
-
+        public ushort FinalScore { get; set; }
         public bool HasReachedFinish { get; set; } = false;
         public long FinishTimestamp { get; set; } = long.MaxValue;
 
-        public int ArrivalRank { get; set; } = -1; //도달하지 않은 경우 -1 
+        //도달하지 않은 경우 -1 
+        public int ArrivalRank { get; set; } = -1;
     }
 }
